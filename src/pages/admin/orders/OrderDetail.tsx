@@ -4,7 +4,7 @@ import { useParams } from "react-router"
 
 const AdminOrderDetail = () => {
     const { orderId } = useParams()
-    const { data: order, isLoading } = useQuery({
+    const { data: order } = useQuery({
         queryKey: ['order-detail', orderId],
         queryFn: () => fetchOrderById(orderId!),
         enabled: !!orderId,
