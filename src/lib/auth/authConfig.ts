@@ -7,8 +7,13 @@ export const { useUser, useLogin, useRegister, useLogout } = configureAuth({
       const res = await api.get('/users/me');
 
       return res?.data?.data
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      if (error.response.status == '401' || error.response.status === '404') {
+        await api.post('users/logout');
+        return null
+      }
+
+      throw error
     }
   },
   loginFn: async (credentials) => {

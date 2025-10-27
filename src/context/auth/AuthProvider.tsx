@@ -8,7 +8,9 @@ import { AuthContext, type CurrentUser } from "./AuthContext";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
-  const { data: user, isLoading } = useUser()
+  const { data: user, isLoading } = useUser({
+    retry: false,
+  })
   const { updateCart } = useCart()
   const logMeOut = useLogout({
     onSuccess: () => {
