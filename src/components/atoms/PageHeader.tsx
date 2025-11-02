@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "../ui/input"
+import { useDebounce } from "@/hooks";
 
 type FilterTye = {
     keyword: string
@@ -14,12 +15,16 @@ interface PageHeaderInterface {
 
 export default function PageHeader({ children, filter, onFilterUpdate }: PageHeaderInterface) {
     const [filterData, setFilterData] = useState(filter)
+    const debouncedFilter = useDebounce(filterData)
+
+    useEffect(() => {
+        onFilterUpdate(debouncedFilter);
+    }, [debouncedFilter, onFilterUpdate]);
 
     const handleUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         const updated = { ...filterData, [name]: value };
         setFilterData(updated);
-        onFilterUpdate(updated);
     }
     return (
         <div className="lg:flex lg:items-center lg:justify-between mb-2">

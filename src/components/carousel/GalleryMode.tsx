@@ -12,9 +12,19 @@ const GalleryMode = ({ images }: GalleryProps) => {
     const [thumbnailApi, setThumbnailApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
 
+    const imageList = useMemo(() => {
+        if (images?.length > 0) {
+            return images
+        } else {
+            return [{
+                url: '/images/no-image.jpg'
+            }]
+        }
+    }, [images])
+
     const mainImage = useMemo(
         () =>
-            images.map((image, index) => (
+            imageList.map((image, index) => (
                 <CarouselItem key={index} className="w-full h-auto">
                     <img
                         className="w-full"
@@ -23,12 +33,12 @@ const GalleryMode = ({ images }: GalleryProps) => {
                     />
                 </CarouselItem>
             )),
-        [images],
+        [imageList],
     );
 
     const thumbnailImages = useMemo(
         () =>
-            images.map((image, index) => (
+            imageList.map((image, index) => (
                 <CarouselItem
                     key={index}
                     className="relative aspect-square w-full basis-1/4"
@@ -41,7 +51,7 @@ const GalleryMode = ({ images }: GalleryProps) => {
                     />
                 </CarouselItem>
             )),
-        [images, current],
+        [imageList, current],
     );
 
     useEffect(() => {

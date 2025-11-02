@@ -41,8 +41,8 @@ export function NavMain({
           return (
             <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip={item.title}>
-                  <Link to={item.url} className={cn(isMenuActive && 'bg-secondary')}>
+                <SidebarMenuButton asChild tooltip={item.title} className='hover:bg-primary-lighten'>
+                  <Link to={item.url} className={cn(isMenuActive && 'bg-primary-lighten',)}>
                     <item.icon />
                     <span>{item.title}
                     </span>

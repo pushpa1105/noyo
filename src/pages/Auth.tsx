@@ -28,7 +28,11 @@ export default function Auth() {
     onSuccess: (data) => {
       toast.success('User logged in successfully.')
       login(data)
-      navigate('/')
+      if(data.role === 'admin') {
+        navigate('/admin')
+      }else {
+        navigate('/')
+      }
     }
   })
   const signUp = useRegister({

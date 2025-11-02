@@ -26,6 +26,8 @@ import Shiping from "./pages/Shiping";
 import AdminOrders from "./pages/admin/orders";
 import ProductDetail from "./pages/products/ProductDetail";
 import AdminOrderDetail from "./pages/admin/orders/OrderDetail";
+import Forbidden from "./pages/Forbidden";
+import MyOrders from "./pages/MyOrders";
 
 function App() {
   return (
@@ -46,11 +48,14 @@ function App() {
           <Route path="/test" element={<Test />} />
           <Route path="/products" element={<PublicProducts />} />
           <Route path="/products/:productId/detail" element={<ProductDetail />} />
+          <Route path="/orders" element={<MyOrders />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/cart" element={<Cart />} />
             <Route path="/shiping" element={<Shiping />} />
           </Route>
+
+        <Route path='/403' element={<Forbidden />} />
         </Route>
 
 
@@ -67,8 +72,6 @@ function App() {
           </Route>
         </Route>
         {/* Admin pages */}
-
-
 
         <Route path='*' element={<NotFound />} />
       </Routes>

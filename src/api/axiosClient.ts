@@ -21,6 +21,12 @@ api.interceptors.response.use(
         ...error,
         message: error?.response?.data?.message || error?.message
       })
+    } else if (error.response?.status === 403) {
+      window.location.href = '/403'
+      return Promise.reject({
+        ...error,
+        message: error?.response?.data?.message || error?.message
+      })
     }
     return Promise.reject(error);
   }

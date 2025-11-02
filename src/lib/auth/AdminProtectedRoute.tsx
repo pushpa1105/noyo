@@ -4,9 +4,13 @@ import { useUser } from "@/lib/auth/authConfig"
 export const AdminProtectedRoute = () => {
     const user = useUser()
 
-    if(!user?.isLoading && user?.data?.role !== 'admin') {
+    if (!user?.isLoading && user?.data?.role === 'user') {
         return (
-            <Navigate to={'/auth'}/>
+            <Navigate to={'/403'} />
+        )
+    } else if (!user?.isLoading && user?.data?.role !== 'admin') {
+        return (
+            <Navigate to={'/auth'} />
         )
     }
 

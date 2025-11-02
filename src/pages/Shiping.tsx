@@ -1,4 +1,4 @@
-import { createOrder, ShipingSchema, type Order } from "@/api";
+import { createOrder, ShipingSchema } from "@/api";
 import { SmartForm } from "@/components/custom/SmartForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +17,7 @@ const Shiping = () => {
     const navigate = useNavigate()
 
     const placeOrder = useMutation({
-        mutationFn: (data: Order) => createOrder(data),
+        mutationFn: (data: Partial<Order>) => createOrder(data),
         onSuccess: (data) => {
             console.log(data)
             toast.success('Order placed successfully.')
