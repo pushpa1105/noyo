@@ -75,7 +75,7 @@ export function ProductListCard({ product }: ProductListCardProps) {
             <CustomImage
                 src={product?.images?.[0]?.url || NoImage}
                 alt={product?._id}
-                className="object-cover rounded-md border w-full min-h-[180px] max-h-[225px]"
+                className="object-cover rounded-md border w-full min-h-[225px] max-h-[225px]"
             />
             <div className="my-2 h-[30px] leading-none">
                 {product?.name || 'N/A'}
