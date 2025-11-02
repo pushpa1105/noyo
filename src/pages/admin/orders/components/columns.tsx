@@ -42,11 +42,13 @@ export const useOrderColumns = (): ColumnDef<SavedOrder>[] => {
                 return (
                     <Status status={row.original.orderStatus} />
                 )
-            }
+            },
+            size: 50,
         },
         {
             accessorKey: "createdAt",
             header: 'Order Date',
+            size: 50,
             cell: ({ row }) => simplifyDate(row?.original?.createdAt)
         },
         {
@@ -70,6 +72,7 @@ export const useOrderColumns = (): ColumnDef<SavedOrder>[] => {
         {
             accessorKey: "itemsPrice",
             header: "Order Value",
+            size: 50,
             cell: ({ row }) => {
                 return (
                     <div>{formatCurrency(row.original.itemsPrice)}</div>
@@ -79,15 +82,18 @@ export const useOrderColumns = (): ColumnDef<SavedOrder>[] => {
         {
             id: "products",
             header: "Products",
+            size: 50,
             cell: ({ row }) => `${row.original.orderItems.length} product(s)`
         },
         {
             id: "qty",
             header: "Qty",
+            size: 30,
             cell: ({ row }) => `${row.original.orderItems.reduce((sum: number, i) => sum + (i?.quantity || 0), 0)} pcs`
         },
         {
             id: "actions",
+            size: 30,
             header: () => <ActionHeaderColumn />,
             cell: ({ row }) => {
                 const order = row?.original;

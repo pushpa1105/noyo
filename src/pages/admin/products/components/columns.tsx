@@ -40,19 +40,23 @@ export const useProductColumns = (): ColumnDef<Product>[] => {
         },
         {
             accessorKey: "category",
+            size: 50,
             header: "Category",
         },
         {
             accessorKey: "brand",
+            size: 50,
             header: "Brand",
         },
         {
             accessorKey: "price",
+            size: 50,
             header: "Price",
             cell: ({ row }) => formatCurrency(row.original.price)
         },
         {
             id: "actions",
+            size: 25,
             header: () => <ActionHeaderColumn />,
             cell: ({ row }) => {
                 const product = row?.original;
