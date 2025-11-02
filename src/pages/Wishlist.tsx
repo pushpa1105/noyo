@@ -1,29 +1,17 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { useAuth } from "@/hooks";
-import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useWishlist } from "@/hooks/wishlist";
+import { useRemoveWishlistItem } from "@/hooks/wishlist/use-remove-wishlist-item";
+import { Link } from "react-router-dom";
 
 export default function Wishlist() {
-  const { currentUser } = useAuth();
-  const navigate = useNavigate();
-  const [wishlistItems, setWishlistItems] = useState([]);
 
-  useEffect(() => {
-    if (!currentUser) {
-      alert("Please login first to view your wishlist.");
-      navigate("/auth");
-    } else {
-      const savedWishlist = JSON.parse(localStorage.getItem("wishlist")!) || [];
-      setWishlistItems(savedWishlist);
-    }
-  }, [currentUser, navigate]);
+  const { wishlist } = useWishlist()
+  const removeProductFromWishlist = useRemoveWishlistItem()
+  const handleRemoveItem = (productId: string) => {
+    removeProductFromWishlist.mutate(productId)
 
-  const removeFromWishlist = (id) => {
-    const updatedWishlist = wishlistItems.filter((item) => item.id !== id);
-    setWishlistItems(updatedWishlist);
-    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -31,7 +19,7 @@ export default function Wishlist() {
         Your Wishlist
       </h1>
 
-      {wishlistItems.length === 0 ? (
+      {wishlist.length === 0 ? (
         <div className="text-center text-black max-w-md mx-auto">
           <p className="mb-4 text-lg">
             This wishlist is empty.
@@ -48,17 +36,19 @@ export default function Wishlist() {
         </div>
       ) : (
         <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg space-y-4">
-          {wishlistItems.map((item) => (
+          {wishlist.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               className="flex justify-between items-center border-b border-gray-200 pb-2"
             >
               <div>
-                <h2 className="font-semibold">{item.name}</h2>
+                <Link to={`/products/${item?._id}/detail`} className="hover:text-primary hover:underline">
+                  <h2 className="font-semibold">{item.name}</h2>
+                </Link>
                 <p className="text-gray-600">${item.price}</p>
               </div>
               <button
-                onClick={() => removeFromWishlist(item.id)}
+                onClick={() => handleRemoveItem(item._id)}
                 className="text-red-500 hover:underline"
               >
                 Remove

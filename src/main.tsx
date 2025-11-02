@@ -8,11 +8,12 @@ import { Toaster } from "@/components/ui/sonner"
 import { toast } from "sonner";
 import ReactQueryLoadingSync from "@/lib/loader/ReactQueryLoadingSync.tsx";
 import { AuthProvider, CartProvider, ConfirmProvider } from "@/context/index.ts";
+import { WishlistProvider } from "./context/wishlist/WishlistProvider.tsx";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
-      toast.error(`API Error: ${error?.message || 'Something went wrong.'}`);
+      toast.error(`${error?.message || 'Something went wrong.'}`);
     }
   }),
   mutationCache: new MutationCache({
@@ -27,13 +28,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <LoadingProvider>
         <CartProvider>
-          <AuthProvider>
-            <ConfirmProvider>
-              <ReactQueryLoadingSync />
-              <App />
-              <Toaster />
-            </ConfirmProvider>
-          </AuthProvider>
+          <WishlistProvider>
+            <AuthProvider>
+              <ConfirmProvider>
+                <ReactQueryLoadingSync />
+                <App />
+                <Toaster />
+              </ConfirmProvider>
+            </AuthProvider>
+          </WishlistProvider>
         </CartProvider>
       </LoadingProvider>
     </QueryClientProvider>

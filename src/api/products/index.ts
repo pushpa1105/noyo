@@ -100,6 +100,11 @@ export const fetchProductDetailById = async (id: string) => {
     return res?.data?.data
 }
 
+export const fetchProductDetailForPublic = async (id: string) => {
+    const res = await api.get(`/products/${id}`)
+    return res?.data?.data
+}
+
 export const deleteProductById = async (id: number | string) => {
     const res = await api.delete(`/products/${id}`)
     return res?.data

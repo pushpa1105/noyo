@@ -138,7 +138,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
                         {(isActive || hovered === idx) && (
                             <motion.div
                                 layoutId="hovered"
-                                className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"
+                                className="absolute inset-0 h-full w-full rounded-full bg-primary-lighten"
                             />
                         )}
                         <span className="relative z-20">{item.name}</span>

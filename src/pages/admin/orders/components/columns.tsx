@@ -1,9 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import { ActionBodyColumn, ActionHeaderColumn } from "@/components/table/columns/ActionColumn"
-import { useConfirm } from "@/hooks"
 import { formatCurrency, getInitials, simplifyDate } from "@/utils"
-import type { Order } from "@/api"
-import { Avatar, AvatarFallback} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Status from "@/components/table/columns/StatusColumn"
 import { useNavigate } from "react-router"
 
@@ -24,7 +22,6 @@ export type SavedOrder = Order & {
 }
 
 export const useOrderColumns = (): ColumnDef<SavedOrder>[] => {
-    const { confirm } = useConfirm()
     const navigate = useNavigate()
     // const queryClient = useQueryClient()
     // const mutation = useMutation({
@@ -87,22 +84,13 @@ export const useOrderColumns = (): ColumnDef<SavedOrder>[] => {
         {
             id: "qty",
             header: "Qty",
-            cell: ({ row }) => `${row.original.orderItems.reduce((sum, i) => sum + i?.quantity, 0)} pcs`
+            cell: ({ row }) => `${row.original.orderItems.reduce((sum: number, i) => sum + (i?.quantity || 0), 0)} pcs`
         },
         {
             id: "actions",
             header: () => <ActionHeaderColumn />,
             cell: ({ row }) => {
                 const order = row?.original;
-
-                const handleDelete = async () => {
-                    const confirmed = await confirm({});
-
-                    if (confirmed) {
-                        // mutation.mutate(product?._id)
-                    }
-                }
-
                 return (
                     <ActionBodyColumn
                         actionItems={[
@@ -110,18 +98,47 @@ export const useOrderColumns = (): ColumnDef<SavedOrder>[] => {
                                 label: 'View',
                                 onClick: () => { navigate(`/admin/orders/${order._id}/detail`) }
                             },
-                            {
-                                label: 'Edit',
-                                onClick: () => { },
-                            },
-                            {
-                                label: 'Delete',
-                                onClick: handleDelete
-                            },
                         ]}
                     />
                 )
             }
+        }
+    ]
+}
+
+export const useOrderDetailColumns = (): ColumnDef<any>[] => {
+    return [
+        {
+            accessorKey: 'name',
+            header: 'Product Name',
+            cell: ({ row }) => {
+                const orderItem = row.original
+                return (
+                    <div className="flex gap-2 items-center">
+                        <Avatar className="h-8 w-8 rounded-lg">
+                            <AvatarImage src={orderItem?.image} alt="product-image" />
+                        </Avatar>
+                        <div className="grid flex-1 text-left text-sm leading-tight">
+                            <span className="truncate font-medium">{orderItem?.name}</span>
+                        </div>
+                    </div>
+                )
+            }
+        },
+        {
+            accessorKey: 'quantity',
+            header: 'Quantity',
+            cell: ({ row }) => `${row.original.quantity} pcs`,
+        },
+        {
+            accessorKey: 'price',
+            header: 'Price',
+            cell: ({ row }) => formatCurrency(row.original.price)
+        },
+        {
+            accessorKey: 'total',
+            header: 'Total',
+            cell: ({ row }) => formatCurrency(row.original.price * row.original.quantity)
         }
     ]
 }

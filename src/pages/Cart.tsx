@@ -3,7 +3,7 @@ import { decreaseItemFromCart, removeItemFromCart } from "@/api";
 import { toast } from "sonner";
 import { useAddtoCart, useCart } from "@/hooks";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export default function Cart() {
   const { cartItems, getTotalPrice } = useCart();
@@ -47,7 +47,9 @@ export default function Cart() {
               className="flex justify-between items-center border-b border-gray-200 pb-2"
             >
               <div>
-                <h2 className="font-semibold">{item?.product?.name}</h2>
+                <Link to={`/products/${item?.product?._id}/detail`} className="hover:text-primary hover:underline">
+                  <h2 className="font-semibold">{item?.product?.name}</h2>
+                </Link>
                 <p className="text-gray-600">${item?.product?.price}</p>
               </div>
 

@@ -21,7 +21,40 @@ type Product = {
     images?: ImageItem[];
 }
 
+type Shipping = {
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+}
+
+type OrderItem = {
+    _id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    image: string;
+}
+
+type Order = {
+    _id: string;
+    createdAt: string;
+    deliveredAt: string;
+    itemsPrice: number;
+    orderItems: OrderItem[] | Partial<OrderItem>[];
+    orderStatus: string;
+    paidAt: string;
+    shippingPrice: number;
+    shippingInfo: Shipping;
+}
+
 type CommonFilter = {
     keyword?: string;
     [key: string]: any;
 }
+
+type Addons = {
+    [key: string]: any;
+}
+
+type OrderStatus = 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';

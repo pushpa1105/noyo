@@ -1,19 +1,26 @@
-import { fetchProductDetailById } from "@/api";
+import { fetchProductDetailForPublic } from "@/api";
 import GalleryMode from "@/components/carousel/GalleryMode";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useAddtoCart } from "@/hooks";
+import { useAddtoCart, useAuth } from "@/hooks";
+import { useAddtoWishlist, useWishlist } from "@/hooks/wishlist";
+import { useRemoveWishlistItem } from "@/hooks/wishlist/use-remove-wishlist-item";
+import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
+import { HeartIcon } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 
 const ProductDetail = () => {
     const { productId } = useParams()
+    const navigate = useNavigate()
+    const { currentUser } = useAuth()
     const { data: product, isLoading: isDataFetching } = useQuery({
         queryKey: ['product-detail', productId],
-        queryFn: () => fetchProductDetailById(productId!),
+        queryFn: () => fetchProductDetailForPublic(productId!),
         enabled: !!productId,
         refetchOnWindowFocus: false, // don't refetch on tab change
         refetchOnReconnect: false,   // don't refetch on reconnect
@@ -22,13 +29,37 @@ const ProductDetail = () => {
 
     const [quantity, setQuantity] = useState(1)
     const addItemToCart = useAddtoCart()
+    const addProductToWishlist = useAddtoWishlist()
+    const removeProductFromWishlist = useRemoveWishlistItem()
+    const { isWhislistedProduct } = useWishlist()
 
     const handleAddToCart = () => {
+        if (!currentUser) {
+            toast.error('You need to login first.')
+            navigate('/auth')
+            return
+        }
         const data = {
             productId: product?._id,
             quantity,
         }
         addItemToCart.mutate(data)
+    }
+
+    const handleAddToWishlist = () => {
+        if (!currentUser) {
+            toast.error('You need to login first.')
+            navigate('/auth')
+            return
+        }
+
+        if (isWhislistedProduct(product?._id)) {
+            removeProductFromWishlist.mutate(product?._id)
+        } else {
+            addProductToWishlist.mutate({
+                productId: product?._id,
+            })
+        }
     }
 
     if (isDataFetching) {
@@ -61,8 +92,15 @@ const ProductDetail = () => {
                     </div>
 
                     <Separator className="my-4" />
-                    <div className="font-bold text-2xl tracking-widest text-primary">
-                        {formatCurrency(product?.price)}
+                    <div className="flex justify-between">
+                        <div className="font-bold text-2xl tracking-widest text-primary">
+                            {formatCurrency(product?.price)}
+                        </div>
+                        <div
+                            className={cn("cursor-pointer", isWhislistedProduct(product?._id) && "*:[svg]:fill-primary *:[svg]:stroke-primary")}
+                            onClick={handleAddToWishlist}>
+                            <HeartIcon />
+                        </div>
                     </div>
 
                     <div className="flex gap-4 h-[48px] mt-4">
@@ -96,7 +134,7 @@ const ProductDetail = () => {
                 <div className="py-2">
                     <h1 className="font-bold underline mb-2">Product Details</h1>
                     <div className="ProseMirror simple-editor-content">
-                        <div dangerouslySetInnerHTML={{ __html: product.description }} />
+                        <div dangerouslySetInnerHTML={{ __html: product?.description }} />
                     </div>
                 </div>
             </div>

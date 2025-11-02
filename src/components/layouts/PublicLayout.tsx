@@ -33,6 +33,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { getInitials } from "@/utils";
+import { useWishlist } from "@/hooks/wishlist";
 
 const NavUser = ({ handleMobileMenuUpdate }: { handleMobileMenuUpdate: (val: boolean) => void }) => {
     const { currentUser, logout } = useAuth()
@@ -84,7 +85,7 @@ const NavUser = ({ handleMobileMenuUpdate }: { handleMobileMenuUpdate: (val: boo
                                         </div>
                                     </div>
                                 </DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => { }}>
+                                <DropdownMenuItem onClick={() => { navigate('/orders') }}>
                                     <List />
                                     My Orders
                                 </DropdownMenuItem>
@@ -110,6 +111,7 @@ const NavUser = ({ handleMobileMenuUpdate }: { handleMobileMenuUpdate: (val: boo
 
 export default function PublicLayout() {
     const { cartItems } = useCart()
+    const { wishlist } = useWishlist()
     const navItems = [
         {
             name: "Products",
@@ -149,6 +151,12 @@ export default function PublicLayout() {
                             className="hover:text-primary relative"
                         >
                             <FiHeart className="text-lg" />
+                            {
+                                wishlist?.length > 0 &&
+                                <Badge className="z-99 absolute -top-3 -right-3 h-5 min-w-5 rounded-full px-1 font-mono tabular-nums">
+                                    {wishlist?.length}
+                                </Badge>
+                            }
                         </Link>
                     </div>
                 </NavBody>
@@ -203,7 +211,7 @@ export default function PublicLayout() {
                     </MobileNavMenu>
                 </MobileNav>
             </Navbar>
-            <div className="container mx-auto p-8 pt-10 w-full max-w-7xl">
+            <div className="container mx-auto p-8 pt-10 w-full max-w-7xl h-auto md:min-h-[calc(100vh-250px)]">
                 <Outlet />
             </div>
             {/* Fix footer later on after finalizing layout */}

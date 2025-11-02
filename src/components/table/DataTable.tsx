@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from "@tabler/icons-react"
+import { cn } from "@/lib/utils"
 // import { Label } from "../ui/label"
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
@@ -33,8 +34,9 @@ export type Meta = {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  meta: Meta
-  onChange: (meta: Meta) => void
+  meta?: Meta
+  onChange?: (meta: Meta) => void
+  className?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -42,10 +44,11 @@ export function DataTable<TData, TValue>({
   data,
   meta,
   onChange,
+  className
 }: DataTableProps<TData, TValue>) {
 
   const [sorting,] = useState<SortingState>([])
-  const [paginationData,] = useState<Meta>(meta)
+  const [paginationData,] = useState<Meta | undefined>(meta)
 
   const table = useReactTable({
     data,
@@ -61,7 +64,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
 
-      <div className="overflow-hidden rounded-md border">
+      <div className={cn("overflow-hidden rounded-md border", className)}>
         <Table>
           <TableHeader className="bg-muted">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -105,10 +108,11 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-
-      <div className="flex items-center justify-end mt-4">
-        <div className="flex w-full items-center gap-8 lg:w-fit">
-          {/* <div className="hidden items-center gap-2 lg:flex">
+      {
+        paginationData && meta &&
+        <div className="flex items-center justify-end mt-4">
+          <div className="flex w-full items-center gap-8 lg:w-fit">
+            {/* <div className="hidden items-center gap-2 lg:flex">
             <Label htmlFor="rows-per-page" className="text-sm font-medium">
               Rows per page
             </Label>
@@ -133,65 +137,66 @@ export function DataTable<TData, TValue>({
               </SelectContent>
             </Select>
           </div> */}
-          <div className="flex w-fit items-center justify-center text-sm font-medium">
-            Page {meta.currentPage} of{" "}
-            {meta.totalPages}
-          </div>
-          <div className="ml-auto flex items-center gap-2 lg:ml-0">
-            <Button
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => onChange({
-                ...paginationData,
-                currentPage: 1
-              })}
-              disabled={meta?.currentPage === 1}
-            >
-              <span className="sr-only">Go to first page</span>
-              <IconChevronsLeft />
-            </Button>
-            <Button
-              variant="outline"
-              className="size-8"
-              size="icon"
-              onClick={() => onChange({
-                ...paginationData,
-                currentPage: Math.max(paginationData.currentPage - 1, 1)
-              })}
-              disabled={meta?.currentPage === 1}
-            >
-              <span className="sr-only">Go to previous page</span>
-              <IconChevronLeft />
-            </Button>
-            <Button
-              variant="outline"
-              className="size-8"
-              size="icon"
-              onClick={() => onChange({
-                ...paginationData,
-                currentPage: Math.min(paginationData.currentPage + 1, meta.totalPages)
-              })}
-              disabled={meta?.currentPage === meta.totalPages}
-            >
-              <span className="sr-only">Go to next page</span>
-              <IconChevronRight />
-            </Button>
-            <Button
-              variant="outline"
-              className="hidden size-8 lg:flex"
-              size="icon"
-              onClick={() => onChange({
-                ...paginationData,
-                currentPage: meta.totalPages
-              })}
-              disabled={meta?.currentPage === meta.totalPages}
-            >
-              <span className="sr-only">Go to last page</span>
-              <IconChevronsRight />
-            </Button>
+            <div className="flex w-fit items-center justify-center text-sm font-medium">
+              Page {meta.currentPage} of{" "}
+              {meta.totalPages}
+            </div>
+            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex"
+                onClick={() => onChange?.({
+                  ...paginationData,
+                  currentPage: 1
+                })}
+                disabled={meta?.currentPage === 1}
+              >
+                <span className="sr-only">Go to first page</span>
+                <IconChevronsLeft />
+              </Button>
+              <Button
+                variant="outline"
+                className="size-8"
+                size="icon"
+                onClick={() => onChange?.({
+                  ...paginationData,
+                  currentPage: Math.max(paginationData.currentPage - 1, 1)
+                })}
+                disabled={meta?.currentPage === 1}
+              >
+                <span className="sr-only">Go to previous page</span>
+                <IconChevronLeft />
+              </Button>
+              <Button
+                variant="outline"
+                className="size-8"
+                size="icon"
+                onClick={() => onChange?.({
+                  ...paginationData,
+                  currentPage: Math.min(paginationData.currentPage + 1, meta.totalPages)
+                })}
+                disabled={meta?.currentPage === meta.totalPages}
+              >
+                <span className="sr-only">Go to next page</span>
+                <IconChevronRight />
+              </Button>
+              <Button
+                variant="outline"
+                className="hidden size-8 lg:flex"
+                size="icon"
+                onClick={() => onChange?.({
+                  ...paginationData,
+                  currentPage: meta.totalPages
+                })}
+                disabled={meta?.currentPage === meta.totalPages}
+              >
+                <span className="sr-only">Go to last page</span>
+                <IconChevronsRight />
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   )
 }
